@@ -1,0 +1,83 @@
+# Horizon launcher — your own customization file.
+#
+# Copy this file to the launcher's data folder as `custom.toml`. The launcher reads it every
+# start and merges every key over its own settings.json, but never writes it, so your edits
+# survive updates and its saves. Delete a key (or the file) to fall back to the default.
+#
+# The data folder is:
+#   Windows: %APPDATA%\Horizon Launcher
+#   macOS:   ~/Library/Application Support/Horizon Launcher
+#   Linux:   ~/.local/share/horizon-launcher
+#
+# Everything below is optional; unset keys keep what Settings › the launcher already chose.
+
+# --- Your own launcher --------------------------------------------------------------
+# The name in the sidebar, the setup screen and the title bar.
+# name = "My Launcher"
+# The window's title (falls back to `name`, then Horizon's).
+# title = "My Launcher"
+
+# --- Promotions ---------------------------------------------------------------------
+# false hides the launcher's partner cards and banners and the sidebar's Discord, Sponsor
+# and Website links (and the "playing now" stats link). Unset means on.
+# promotions = false
+
+# --- Microsoft sign-in --------------------------------------------------------------
+# Your own Azure app's Application (client) ID, for signing players in with a Microsoft
+# account. Register it at portal.azure.com -> Microsoft Entra ID -> App registrations:
+# "Personal Microsoft accounts only", no redirect needed, then Authentication ->
+# "Allow public client flows: Yes". Mojang must also approve the app ID
+# (https://aka.ms/mce-reviewappid) before api.minecraftservices.com accepts it.
+# msa_client_id = "00000000-0000-0000-0000-000000000000"
+
+
+# --- Look ---------------------------------------------------------------------------
+# "dark", "light" or "system".
+# appearance = "dark"
+# A theme from Settings › Appearance: "horizon", "nord", "first-light", ...
+# theme = "nord"
+# An accent: a hue in degrees ("210"), a named hue ("red", "orange", "yellow", "green",
+# "cyan", "blue", "magenta") or a hex colour ("#88c0d0"). Empty or "default" is Horizon's violet.
+# accent = "#88c0d0"
+# The glass look's plates: white in percent (0-16) and blur in px (0-48). Unset is 6 and 24.
+# glass = 6.0
+# blur = 24.0
+# Home's background: the file name of a picture you picked in Settings. Unset is Horizon's landscape.
+# background = "my-sky.png"
+# The cheaper scene for older computers: true or false.
+# performance = false
+# The window's language ("en", "de", ...). Unset follows the system's.
+# language = "en"
+
+# --- Playing ------------------------------------------------------------------------
+# The instance Play starts, by id (`horizon-launcher instance list`). Unset is Horizon, the game's home.
+# instance = "my-world"
+# Where the game folder and the hosted servers live.
+# minecraft_dir = "D:/Games/Minecraft"
+# server_dir = "D:/Games/Minecraft Servers"
+# Extra arguments for the game's command line, as one line, appended after the launcher's own.
+# game_args = "--width 1280 --height 720"
+# The proxy every download goes through: "http://127.0.0.1:7890" or "socks5://127.0.0.1:1080".
+# proxy = "socks5://127.0.0.1:1080"
+# What the window does while the game runs: "stay", "minimize" or "hide" (macOS only).
+# while_playing = "minimize"
+# Skip the opening animation.
+# skip_opening = true
+# Which copy of the game runs: "auto", "x86_64" or "x86".
+# game_architecture = "auto"
+
+# --- Versions and updates -----------------------------------------------------------
+# Install new Horizon versions by themselves.
+# install_new_versions = true
+# Delete the release versions nothing needs after an install.
+# prune_old_versions = true
+# How many of the newest release versions pruning keeps.
+# keep_versions = 2
+# Whether the mods the browser installed update by themselves.
+# mods_auto_update = true
+# The native builds' compilation cache limit, in GiB (0 disables automatic cleanup).
+# native_cache_gib = 30
+
+# --- Native mods (compiling your own .hnmod files) -----------------------------------
+# The profile they compile with; see Settings › Native mods.
+# native_profile = "fast"
