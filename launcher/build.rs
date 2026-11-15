@@ -1,4 +1,4 @@
-//! Embeds Horizon's icon (`packaging/icons/horizon.ico`) in the Windows executables, as icon
+//! Embeds Phoenix's icon (`packaging/icons/phoenix.ico`) in the Windows executables, as icon
 //! resource 1: Explorer and the task bar show it, and the window takes it as its icon.
 fn main() {
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
@@ -8,7 +8,7 @@ fn main() {
         println!("cargo:rustc-link-arg-bins=/DEPENDENTLOADFLAG:0x800");
     }
     let dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_default();
-    let ico = format!("{dir}/../packaging/icons/horizon.ico");
+    let ico = format!("{dir}/../packaging/icons/phoenix.ico");
     println!("cargo:rerun-if-changed={ico}");
     #[cfg(windows)]
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {

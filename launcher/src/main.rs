@@ -2204,35 +2204,72 @@ fn version_tag(tag: &str) -> Div {
         )
 }
 
-/// Horizon's mark: two stems, their reflection below, and the horizon across in the accent.
-fn mark(size: f32, t: &Theme) -> Div {
+/// Phoenix's mark: a yellow bird rising over its flame against a dark night sky, two dim stars
+/// beside it. Sixteen pixels square: `B` is the bird, `F` its flame, `S` a star, `.` the night.
+const PHOENIX: [&str; 16] = [
+    ".S...........S..",
+    "....B......B....",
+    "....B......B....",
+    "....BB....BB....",
+    "...BBB.BB.BBB...",
+    "..BBBB.BB.BBBB..",
+    "..BBBBBBBBBBBB..",
+    "..BBBBBBBBBBBB..",
+    "...BBBBBBBBBB...",
+    "....BBBBBBBB....",
+    ".....FFBBFF.....",
+    "....FFFBBFFF....",
+    "....FFFFFFFF....",
+    "....FFFFFFFF....",
+    ".....FFFFFF.....",
+    "......FFFF......",
+];
+
+/// The mark's own colours (`0xrrggbb`), night to flame. Fixed, not the theme's, so the icon
+/// always matches the one in Explorer and the task bar.
+const NIGHT: u32 = 0x0d0d1a;
+const BIRD: u32 = 0xffd43b;
+const FLAME: u32 = 0xff8c1a;
+const STAR: u32 = 0x7a8ab2;
+
+fn mark(size: f32, _t: &Theme) -> Div {
     let u = size / 16.;
-    let stem = |x: f32, y: f32, color: Hsla| {
+    let tile = |x: f32, y: f32, w: f32, color: u32| {
         div()
             .absolute()
             .left(px(x * u))
             .top(px(y * u))
-            .w(px(2. * u))
-            .h(px(4. * u))
-            .bg(color)
+            .w(px(w * u))
+            .h(px(u))
+            .bg(Hsla::from(gpui::rgb(color)))
     };
-    div()
+    let mut pixels = div()
         .relative()
         .flex_none()
         .size(px(size))
-        .child(stem(4., 3., t.ink))
-        .child(stem(10., 3., t.ink))
-        .child(stem(4., 8., t.ink.opacity(0.36)))
-        .child(stem(10., 8., t.ink.opacity(0.36)))
-        .child(
-            div()
-                .absolute()
-                .left(px(u))
-                .top(px(7. * u))
-                .w(px(14. * u))
-                .h(px(u))
-                .bg(t.accent),
-        )
+        .child(tile(0., 0., 16., NIGHT));
+    for (y, row) in PHOENIX.iter().enumerate() {
+        let cells: Vec<char> = row.chars().collect();
+        let mut x = 0;
+        while x < cells.len() {
+            let c = cells[x];
+            if c == '.' {
+                x += 1;
+                continue;
+            }
+            let start = x;
+            while x < cells.len() && cells[x] == c {
+                x += 1;
+            }
+            let color = match c {
+                'B' => BIRD,
+                'F' => FLAME,
+                _ => STAR,
+            };
+            pixels = pixels.child(tile(start as f32, y as f32, (x - start) as f32, color));
+        }
+    }
+    pixels
 }
 
 /// The last thing the player did was press Tab: focused controls show a ring (a click focuses them

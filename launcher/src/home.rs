@@ -44,22 +44,25 @@ impl Launcher {
         what.push(tr(if prepared { "Ready" } else { "Needs preparing" }).to_string());
         // The exact count, a link to the page with its history and peaks.
         let ink = c(n.ink);
-        let playing = self.playing.filter(|_| self.settings.shows_promotions()).map(|count| {
-            let label = format!(
-                "· {}",
-                trf("{count} playing now", &[("count", &thousands(count))])
-            );
-            match telemetry::stats_url(&self.links.website) {
-                Some(url) => div()
-                    .id("playing-now")
-                    .cursor_pointer()
-                    .hover(move |s| s.text_color(ink))
-                    .child(label)
-                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(&url))
-                    .into_any_element(),
-                None => div().child(label).into_any_element(),
-            }
-        });
+        let playing = self
+            .playing
+            .filter(|_| self.settings.shows_promotions())
+            .map(|count| {
+                let label = format!(
+                    "· {}",
+                    trf("{count} playing now", &[("count", &thousands(count))])
+                );
+                match telemetry::stats_url(&self.links.website) {
+                    Some(url) => div()
+                        .id("playing-now")
+                        .cursor_pointer()
+                        .hover(move |s| s.text_color(ink))
+                        .child(label)
+                        .on_click(move |_: &ClickEvent, _, cx| cx.open_url(&url))
+                        .into_any_element(),
+                    None => div().child(label).into_any_element(),
+                }
+            });
         // The official server's own count, from its status ping: opens the Servers page, where
         // it is listed.
         let official = self.official_players.map(|count| {

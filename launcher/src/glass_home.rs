@@ -265,18 +265,21 @@ impl Launcher {
                 .hover(|s| s.text_color(white(ink::FULL)))
                 .child(label)
         };
-        let playing = self.playing.filter(|_| self.settings.shows_promotions()).map(|count| {
-            let label = format!(
-                "· {}",
-                trf("{count} playing now", &[("count", &thousands(count))])
-            );
-            let url = telemetry::stats_url(&self.links.website);
-            link("playing-now", label).on_click(move |_: &ClickEvent, _, cx| {
-                if let Some(url) = &url {
-                    cx.open_url(url);
-                }
-            })
-        });
+        let playing = self
+            .playing
+            .filter(|_| self.settings.shows_promotions())
+            .map(|count| {
+                let label = format!(
+                    "· {}",
+                    trf("{count} playing now", &[("count", &thousands(count))])
+                );
+                let url = telemetry::stats_url(&self.links.website);
+                link("playing-now", label).on_click(move |_: &ClickEvent, _, cx| {
+                    if let Some(url) = &url {
+                        cx.open_url(url);
+                    }
+                })
+            });
         let official = self.official_players.map(|count| {
             link(
                 "official-players",

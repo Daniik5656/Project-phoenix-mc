@@ -4552,9 +4552,10 @@ impl Settings {
         // The player's own `custom.toml` sits on top of settings.json: the launcher never
         // writes it, so a hand-edited key survives every `save`. A deep merge means a table
         // in the file (none yet) keeps the rest of the JSON's table.
-        let mut value: serde_json::Value =
-            serde_json::from_str(&fs::read_to_string(data_dir().join("settings.json")).unwrap_or_default())
-                .unwrap_or(serde_json::Value::Null);
+        let mut value: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(data_dir().join("settings.json")).unwrap_or_default(),
+        )
+        .unwrap_or(serde_json::Value::Null);
         if let Ok(custom) = fs::read_to_string(data_dir().join("custom.toml")) {
             if let Ok(toml) = toml::from_str::<toml::Value>(&custom) {
                 if let Ok(overlay) = serde_json::to_value(&toml) {
