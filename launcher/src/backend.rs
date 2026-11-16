@@ -929,7 +929,7 @@ pub fn data_dir() -> PathBuf {
     }
     dirs::data_dir()
         .unwrap_or_else(std::env::temp_dir)
-        .join("horizon-launcher")
+        .join("phoenix-mc-launcher")
 }
 
 /// A canonical path without Windows' verbatim prefix: `canonicalize` gives `\\?\C:\...` there,
@@ -1007,7 +1007,7 @@ fn ascii_build_dir(real: &Path, program_data: Option<PathBuf>) -> PathBuf {
         .unwrap_or_else(|| PathBuf::from(r"C:\ProgramData"));
     let key = Sha256::digest(real.as_os_str().as_encoded_bytes());
     let key: String = key[..4].iter().map(|b| format!("{b:02x}")).collect();
-    public.join(format!("horizon-launcher-{key}"))
+    public.join(format!("phoenix-mc-launcher-{key}"))
 }
 
 /// `GetShortPathNameW`: `path`'s short (8.3) name, or None on error. A folder with no short
@@ -2660,7 +2660,7 @@ pub fn game_home() -> PathBuf {
     }
     dirs::data_dir()
         .unwrap_or_else(std::env::temp_dir)
-        .join("horizon")
+        .join("phoenix-mc")
 }
 
 /// Whether No AI is on: every AI feature hidden and off (`horizon_platform::no_ai`, kept in the
@@ -4514,10 +4514,10 @@ pub struct Settings {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub native_release: bool,
     /// The launcher's name in the sidebar's brand (`custom.toml`'s `name`). Unset is Horizon's.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(default, alias = "name", skip_serializing_if = "Option::is_none")]
     pub custom_name: Option<String>,
     /// The window's title (`custom.toml`'s `title`). Unset is the name (`custom_name`, or Horizon's).
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(default, alias = "title", skip_serializing_if = "Option::is_none")]
     pub custom_title: Option<String>,
     /// The Azure app for Microsoft sign-in (`custom.toml`'s `msa_client_id`). Unset means the
     /// environment's `HORIZON_MSA_CLIENT_ID`, then the build's.
@@ -4829,7 +4829,7 @@ mod tests {
         assert_eq!(dir.parent(), Some(public.as_path()));
         let name = dir.file_name().unwrap().to_str().unwrap();
         assert!(
-            name.starts_with("horizon-launcher-") && name.len() == 25,
+            name.starts_with("phoenix-mc-launcher-") && name.len() == 28,
             "{name}"
         );
         assert_eq!(dir, ascii_build_dir(pavlo, Some(public.clone())), "stable");

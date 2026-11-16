@@ -290,11 +290,17 @@ pub fn list() -> Vec<Instance> {
     list_in(&backend::game_home(), &backend::data_dir())
 }
 
+/// The default instance's display name: the launcher's brand (`custom.toml`'s `name`), so the
+/// game's home is called what the launcher is called.
+pub fn default_name() -> String {
+    crate::backend::brand_name()
+}
+
 fn list_in(game_home: &Path, data: &Path) -> Vec<Instance> {
     let mut store = Store::load(data);
     let mut found = vec![(
         DEFAULT.to_string(),
-        "Horizon".to_string(),
+        default_name(),
         Kind::Default,
         game_home.to_path_buf(),
         game_home.to_path_buf(),

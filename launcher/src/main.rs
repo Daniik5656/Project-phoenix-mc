@@ -2207,22 +2207,22 @@ fn version_tag(tag: &str) -> Div {
 /// Phoenix's mark: a yellow bird rising over its flame against a dark night sky, two dim stars
 /// beside it. Sixteen pixels square: `B` is the bird, `F` its flame, `S` a star, `.` the night.
 const PHOENIX: [&str; 16] = [
-    ".S...........S..",
-    "....B......B....",
-    "....B......B....",
-    "....BB....BB....",
-    "...BBB.BB.BBB...",
-    "..BBBB.BB.BBBB..",
-    "..BBBBBBBBBBBB..",
-    "..BBBBBBBBBBBB..",
+    "B......BB......B",
+    "BB.....BB.....BB",
+    "BBB...BBBB...BBB",
+    "BBBB.BBBBBB.BBBB",
+    "BBBBBBBBBBBBBBBB",
+    ".BBBBBBBBBBBBBB.",
     "...BBBBBBBBBB...",
-    "....BBBBBBBB....",
+    ".S...BBBBBB.....",
+    "......BBBB......",
     ".....FFBBFF.....",
-    "....FFFBBFFF....",
+    "....FFFBBFFF..S.",
     "....FFFFFFFF....",
     "....FFFFFFFF....",
     ".....FFFFFF.....",
     "......FFFF......",
+    ".......FF.......",
 ];
 
 /// The mark's own colours (`0xrrggbb`), night to flame. Fixed, not the theme's, so the icon
@@ -5546,14 +5546,21 @@ impl Render for Launcher {
             // The wordmark arrives letter by letter, then gives way to the launcher; a click or
             // a key skips ahead.
             let gone = 1. - ease_out_cubic(reveal / 0.6);
-            let word = div()
+            // The wordmark is the player's own brand (`custom.toml`'s `name`), in the mark's
+            // yellow under the phoenix. A name longer than Horizon's scales down, so a rename
+            // never overflows the window.
+            let brand = crate::backend::brand_name().to_uppercase();
+            let width: f32 = size.width.into();
+            let letter_px = (theme::WORDMARK.px * 0.5)
+                .min(width * 0.84 / (1.05 * brand.chars().count().max(1) as f32));
+            let letters = div()
                 .flex()
                 .font_family(theme::PIXEL)
-                .text_size(px(theme::WORDMARK.px * 0.5))
-                .line_height(px(theme::WORDMARK.px * 0.5))
+                .text_size(px(letter_px))
+                .line_height(px(letter_px))
                 .font_weight(FontWeight::BOLD)
-                .text_color(t.ink)
-                .children("HORIZON".chars().enumerate().map(|(i, c)| {
+                .text_color(gpui::rgb(0xffd43b))
+                .children(brand.chars().enumerate().map(|(i, c)| {
                     let at = held - i as f32 * theme::STAGGER.as_secs_f32() * 1.5;
                     let p = ease_out_cubic(at / theme::ENTER.as_secs_f32());
                     div()
@@ -5562,6 +5569,13 @@ impl Render for Launcher {
                         .top(px(theme::RISE * 2. * (1. - p)))
                         .child(c.to_string())
                 }));
+            let word = div()
+                .flex()
+                .flex_col()
+                .items_center()
+                .gap(px(18.))
+                .child(mark(44., &t))
+                .child(letters);
             root = root.child(
                 div()
                     .id("opening")
